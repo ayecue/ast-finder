@@ -13,9 +13,9 @@ var Klass = require('node-klass'),
 	from = Klass.from;
 
 module.exports = Klass.define('AstFinder.Processor',{
-	statics : {
-		opts : {
-			single : function(properties,node,batch){
+	statics: {
+		opts: {
+			single: function(properties,node,batch){
 				var me = this;
 
 				forEach(from(properties),function(_,property){
@@ -25,7 +25,7 @@ module.exports = Klass.define('AstFinder.Processor',{
 			        }
 				});
 			},
-			multi : function(properties,node,batch){
+			multi: function(properties,node,batch){
 				var me = this;
 
 				forEach(from(properties),function(_,property){
@@ -39,7 +39,7 @@ module.exports = Klass.define('AstFinder.Processor',{
 					}
 				});
 			},
-			advanced : function(checkProperties,loopProperties,node,batch){
+			advanced: function(checkProperties,loopProperties,node,batch){
 				var me = this;
 
 				forEach(from(checkProperties),function(_,property){
@@ -60,14 +60,14 @@ module.exports = Klass.define('AstFinder.Processor',{
 			}
 		}
 	},
-	constructor : function(type,args){
+	constructor: function(type,args){
 		this.extend({
 			fn : null,
 			type : type,
 			args : args
 		});
 	},
-	create : function(){
+	create: function(){
 		var me = this,
 			$class = me.getKlass();
 
@@ -79,7 +79,7 @@ module.exports = Klass.define('AstFinder.Processor',{
 
 		return me;
 	},
-	get : function(){
+	get: function(){
 		var me = this;
 
 		return !me.fn ? me.create().get() : me.fn;

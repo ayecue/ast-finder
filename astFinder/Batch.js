@@ -16,13 +16,13 @@ module.exports = Klass.define('AstFinder.Batch',{
         'AstFinder.Batch.Stack',
         'AstFinder.Batch.Selector'
     ],
-    constructor : function(selectors){
+    constructor: function(selectors){
         this.extend({
             selectors : AstFinder.Batch.Selector.factory(from(selectors)),
             stack : new AstFinder.Batch.Stack()
         });
     },
-    evaluate : function(node,property){
+    evaluate: function(node,property){
         var me = this;
 
         forEach(me.selectors,function(_,selector){
@@ -31,10 +31,10 @@ module.exports = Klass.define('AstFinder.Batch',{
             }
         });
     },
-    get : function(idx){
+    get: function(idx){
         return this.selectors[idx];
     },
-    any : function(type){
+    any: function(type){
         var me = this;
 
         return forEach(me.selectors,function(index,selector){
@@ -43,10 +43,10 @@ module.exports = Klass.define('AstFinder.Batch',{
             }
         },[]);
     },
-    first : function(type){
+    first: function(type){
         return this.any(type).shift();
     },
-    last : function(type){
+    last: function(type){
         return this.any(type).pop();
     }
 });

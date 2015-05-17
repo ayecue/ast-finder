@@ -17,14 +17,14 @@ module.exports = Klass.define('AstFinder.Batch.Selector',{
         'AstFinder.Batch.Selector.Condition'
     ],
     statics : {
-        factory : function(selectors){
+        factory: function(selectors){
             return forEach(selectors,function(_,config){
                 var klass = Klass.get('AstFinder.Batch.Selector');
                 this.result.push(new klass(config));
             },[]);
         }
     },
-    constructor : function(config){
+    constructor: function(config){
         this.extend({
             found : [],
             conditions : AstFinder.Batch.Selector.Condition.factory(config.conditions),
@@ -32,7 +32,7 @@ module.exports = Klass.define('AstFinder.Batch.Selector',{
             resultType : config.resultType
         });
     },
-    indexOf : function(node){
+    indexOf: function(node){
         var me = this;
 
         return forEach(me.found,function(_,n){
@@ -42,7 +42,7 @@ module.exports = Klass.define('AstFinder.Batch.Selector',{
             }
         },-1);
     },
-    add : function(){
+    add: function(){
         var me = this;
 
         forEach(arguments,function(_,node){
@@ -51,7 +51,7 @@ module.exports = Klass.define('AstFinder.Batch.Selector',{
             }
         });
     },
-    remove : function(){
+    remove: function(){
         var me = this;
 
         forEach(arguments,function(_,node){
@@ -62,7 +62,7 @@ module.exports = Klass.define('AstFinder.Batch.Selector',{
             }
         });
     },
-    evaluate : function(node){
+    evaluate: function(node){
         var me = this;
 
         return forEach(me.conditions,function(_,condition){
@@ -74,15 +74,15 @@ module.exports = Klass.define('AstFinder.Batch.Selector',{
             }
         },true);
     },
-    isComplete : function(){
+    isComplete: function(){
         var me = this;
 
         return CONSTANTS.SELECTOR.SINGLE === me.resultType && me.found.length > 0;
     },
-    isEmpty : function(){
+    isEmpty: function(){
         return this.found.length === 0;
     },
-    each : function(fn){
+    each: function(fn){
         var me = this;
 
         forEach(me.found,function(index,node){

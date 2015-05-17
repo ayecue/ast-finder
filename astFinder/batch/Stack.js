@@ -18,7 +18,7 @@ module.exports = Klass.define('AstFinder.Batch.Stack',{
 			trace: []
 		});
 	},
-	add : function(node){
+	add: function(node){
 		var me = this,
 			idx = me.trace.push(node) - 1;
 			
@@ -30,7 +30,7 @@ module.exports = Klass.define('AstFinder.Batch.Stack',{
 
 		return idx;
 	},
-	remove : function(idx){
+	remove: function(idx){
 		var me = this;
 
 		if (idx in me.trace) {

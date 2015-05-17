@@ -10,6 +10,7 @@
 var Klass = require('node-klass'),
 	uglifyjs = require('uglify-js'),
 	typeOf = Klass.typeOf,
+	toArray = Klass.toArray,
 	CONSTANTS = require('./astFinder/constants');
 
 module.exports = Klass.define('AstFinder',{
@@ -18,6 +19,7 @@ module.exports = Klass.define('AstFinder',{
 
 	AST_TYPES: CONSTANTS.AST_TYPES,
 	SELECTOR: CONSTANTS.SELECTOR,
+	$uglifyjs: uglifyjs,
 
 	requires: [
 		'AstFinder.Batch',
@@ -69,8 +71,19 @@ module.exports = Klass.define('AstFinder',{
 		return batch;
 	},
 
+	uglify: function(){
+		var args = toArray(arguments),
+			fn = args.shift();
+
+		if (!(fn in this.$uglifyjs)) {
+			throw new Error('Function not found.');
+		}
+
+		return this.$uglifyjs[fn].apply(this.$uglifyjs,arguments);
+	},
+
 	parse: function(code){
-		var parsed = uglifyjs.parse(code);
+		var parsed = this.uglify('parse',code);
 
 		parsed.figure_out_scope();
 
@@ -78,7 +91,7 @@ module.exports = Klass.define('AstFinder',{
 	},
 
 	toString: function(parsed,optimizer){
-		var stream = uglifyjs.OutputStream(optimizer || {});
+		var stream = this.uglify('OutputStream',optimizer || {});
 
 		parsed.print(stream);
 

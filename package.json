@@ -1,6 +1,6 @@
 {
     "name": "ast-finder",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "AST finder utility.",
     "main": "AstFinder.js",
     "homepage": "https://github.com/ayecue/ast-finder",

@@ -12,19 +12,16 @@ var Klass = require('node-klass'),
 
 module.exports = Klass.define('AstFinder.Batch.Stack.Generator',{
     singleton: true,
-    constructor : function(){
-        this.callParent([CONSTANTS.GENERATOR.STACK]);
-    },
-    constructor : function(prefix,index){
+    constructor: function(prefix,index){
 		this.extend({
 			prefix : CONSTANTS.GENERATOR.STACK,
 			index : CONSTANTS.GENERATOR.DEFAULT
 		});
 	},
-	get : function(){
+	get: function(){
 		return this.prefix + (this.index++);
 	},
-	reset : function(){
+	reset: function(){
 		this.index = CONSTANTS.GENERATOR.DEFAULT;
 	}
 });

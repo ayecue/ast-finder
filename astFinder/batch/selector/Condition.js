@@ -12,14 +12,14 @@ var Klass = require('node-klass'),
 
 module.exports = Klass.define('AstFinder.Batch.Selector.Condition',{
     statics : {
-        factory : function(conditions){
+        factory: function(conditions){
             return forEach(conditions,function(namespace,value){
                 var klass = Klass.get('AstFinder.Batch.Selector.Condition');
                 this.result.push(new klass(namespace,value));
             },[]);
         }
     },
-    constructor : function(namespace,value){
+    constructor: function(namespace,value){
         this.extend({
             namespace : namespace,
             value : value

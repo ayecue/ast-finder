@@ -25,7 +25,8 @@ exports.AST_TYPES = {
 	IF : "If",
 	BLOCK_STATEMENT : "BlockStatement",
 	SYMBOL_REF : "SymbolRef",
-	RETURN : "Return"
+	RETURN : "Return",
+	DEFUN: "Defun"
 };
 
 exports.GENERATOR = {

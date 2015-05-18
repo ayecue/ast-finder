@@ -13,13 +13,12 @@ var Klass = require('node-klass'),
 	toArray = Klass.toArray,
 	CONSTANTS = require('./astFinder/constants');
 
-module.exports = Klass.define('AstFinder',{
+module.exports = Klass.setSource(__filename).setScope(GLOBAL).define('AstFinder',{
 
 	singleton : true,
 
 	AST_TYPES: CONSTANTS.AST_TYPES,
 	SELECTOR: CONSTANTS.SELECTOR,
-	$uglifyjs: uglifyjs,
 
 	requires: [
 		'AstFinder.Batch',
@@ -32,17 +31,18 @@ module.exports = Klass.define('AstFinder',{
 			opts = $class.opts = {};
 
 		opts[me.AST_TYPES.FUNCTION] = new AstFinder.Processor('multi',['body']).get();
-		opts[me.AST_TYPES.VAR] =  new AstFinder.Processor('multi',['definitions']).get();
-		opts[me.AST_TYPES.VAR_DEF] =  new AstFinder.Processor('single',['value']).get();
-		opts[me.AST_TYPES.ASSIGN] =  new AstFinder.Processor('single',['right']).get();
-		opts[me.AST_TYPES.CALL] =  new AstFinder.Processor('advanced',['expression',['args','expression']]).get();
-		opts[me.AST_TYPES.SIMPLE_STATEMENT] =  new AstFinder.Processor('single',['body']).get();
-		opts[me.AST_TYPES.TOPLEVEL] =  new AstFinder.Processor('multi',['body']).get();
-		opts[me.AST_TYPES.OBJECT] =  new AstFinder.Processor('multi',['properties']).get();
-		opts[me.AST_TYPES.OBJECT_KEY_VAL] =  new AstFinder.Processor('single',['value']).get();
-		opts[me.AST_TYPES.IF] =  new AstFinder.Processor('single',['body']).get();
-		opts[me.AST_TYPES.BLOCK_STATEMENT] =  new AstFinder.Processor('multi',['body']).get();
-		opts[me.AST_TYPES.RETURN] =  new AstFinder.Processor('single',['value']).get();
+		opts[me.AST_TYPES.VAR] = new AstFinder.Processor('multi',['definitions']).get();
+		opts[me.AST_TYPES.VAR_DEF] = new AstFinder.Processor('single',['value']).get();
+		opts[me.AST_TYPES.ASSIGN] = new AstFinder.Processor('single',['right']).get();
+		opts[me.AST_TYPES.CALL] = new AstFinder.Processor('advanced',['expression',['args','expression']]).get();
+		opts[me.AST_TYPES.SIMPLE_STATEMENT] = new AstFinder.Processor('single',['body']).get();
+		opts[me.AST_TYPES.TOPLEVEL] = new AstFinder.Processor('multi',['body']).get();
+		opts[me.AST_TYPES.OBJECT] = new AstFinder.Processor('multi',['properties']).get();
+		opts[me.AST_TYPES.OBJECT_KEY_VAL] = new AstFinder.Processor('single',['value']).get();
+		opts[me.AST_TYPES.IF] = new AstFinder.Processor('single',['body']).get();
+		opts[me.AST_TYPES.BLOCK_STATEMENT] = new AstFinder.Processor('multi',['body']).get();
+		opts[me.AST_TYPES.RETURN] = new AstFinder.Processor('single',['value']).get();
+		opts[me.AST_TYPES.DEFUN] = new AstFinder.Processor('multi',['body']).get();
 	},
 
 	findQueue: function(node,batch){
@@ -58,9 +58,9 @@ module.exports = Klass.define('AstFinder',{
         }
 	},
 
-	find: function(node,selectors){
+	find: function(node,selectors,processor,condition){
 		var me = this,
-			batch = new AstFinder.Batch(selectors);
+			batch = new AstFinder.Batch(selectors,processor,condition);
 
 		if (typeOf(node) === 'string') {
 			node = me.parse(node);
@@ -71,19 +71,33 @@ module.exports = Klass.define('AstFinder',{
 		return batch;
 	},
 
-	uglify: function(){
+	get: function(prop){
+		return uglifyjs[prop];
+	},
+
+	execute: function(){
 		var args = toArray(arguments),
 			fn = args.shift();
 
-		if (!(fn in this.$uglifyjs)) {
-			throw new Error('Function not found.');
-		}
+		return this.get(fn).apply(uglifyjs,args);
+	},
 
-		return this.$uglifyjs[fn].apply(this.$uglifyjs,arguments);
+	factory: function(){
+		var args = toArray(arguments),
+			fn = args.shift(),
+			prop = this.get(fn),
+			newHandle;
+
+		newHandle = function(){
+			return prop.apply(this,args);
+		};
+		newHandle.prototype = prop.prototype;
+
+		return new newHandle();
 	},
 
 	parse: function(code){
-		var parsed = this.uglify('parse',code);
+		var parsed = this.execute('parse',code);
 
 		parsed.figure_out_scope();
 
@@ -91,7 +105,7 @@ module.exports = Klass.define('AstFinder',{
 	},
 
 	toString: function(parsed,optimizer){
-		var stream = this.uglify('OutputStream',optimizer || {});
+		var stream = this.execute('OutputStream',optimizer || {});
 
 		parsed.print(stream);
 

@@ -25,6 +25,7 @@ module.exports = Klass.define('AstFinder.Processor',{
 			        }
 				});
 			},
+
 			multi: function(properties,node,batch){
 				var me = this;
 
@@ -39,6 +40,7 @@ module.exports = Klass.define('AstFinder.Processor',{
 					}
 				});
 			},
+
 			advanced: function(checkProperties,loopProperties,node,batch){
 				var me = this;
 
@@ -60,6 +62,7 @@ module.exports = Klass.define('AstFinder.Processor',{
 			}
 		}
 	},
+
 	constructor: function(type,args){
 		this.extend({
 			fn : null,
@@ -67,6 +70,7 @@ module.exports = Klass.define('AstFinder.Processor',{
 			args : args
 		});
 	},
+
 	create: function(){
 		var me = this,
 			$class = me.getKlass();
@@ -79,9 +83,8 @@ module.exports = Klass.define('AstFinder.Processor',{
 
 		return me;
 	},
-	get: function(){
-		var me = this;
 
-		return !me.fn ? me.create().get() : me.fn;
+	get: function(){
+		return this.fn || this.create().get();
 	} 
 });

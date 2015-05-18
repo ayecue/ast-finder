@@ -16,6 +16,7 @@ module.exports = Klass.define('AstFinder.Batch.Selector',{
     requires: [
         'AstFinder.Batch.Selector.Condition'
     ],
+
     statics : {
         factory: function(selectors){
             return forEach(selectors,function(_,config){
@@ -24,6 +25,7 @@ module.exports = Klass.define('AstFinder.Batch.Selector',{
             },[]);
         }
     },
+
     constructor: function(config){
         this.extend({
             found : [],
@@ -32,6 +34,7 @@ module.exports = Klass.define('AstFinder.Batch.Selector',{
             resultType : config.resultType
         });
     },
+
     indexOf: function(node){
         var me = this;
 
@@ -42,6 +45,7 @@ module.exports = Klass.define('AstFinder.Batch.Selector',{
             }
         },-1);
     },
+
     add: function(){
         var me = this;
 
@@ -51,6 +55,7 @@ module.exports = Klass.define('AstFinder.Batch.Selector',{
             }
         });
     },
+
     remove: function(){
         var me = this;
 
@@ -62,6 +67,7 @@ module.exports = Klass.define('AstFinder.Batch.Selector',{
             }
         });
     },
+
     evaluate: function(node){
         var me = this;
 
@@ -74,14 +80,17 @@ module.exports = Klass.define('AstFinder.Batch.Selector',{
             }
         },true);
     },
+
     isComplete: function(){
         var me = this;
 
         return CONSTANTS.SELECTOR.SINGLE === me.resultType && me.found.length > 0;
     },
+
     isEmpty: function(){
         return this.found.length === 0;
     },
+
     each: function(fn){
         var me = this;
 
